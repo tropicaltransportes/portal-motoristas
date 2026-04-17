@@ -17,31 +17,47 @@
     .search-area button { width: 100%; height: 42px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; }
     .search-area button:active { background: #178a65; }
     .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px; }
-    .stat { background: #fff; border-radius: 10px; padding: 10px 6px; text-align: center; border: 1px solid #e5e5e0; }
-    .stat-num { font-size: 22px; font-weight: 600; }
+    .stat { background: #fff; border-radius: 10px; padding: 10px 6px; text-align: center; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
+    .stat:hover { border-color: #ddd; }
+    .stat.active-filter { border-color: currentColor; }
+    .stat-num { font-size: 22px; font-weight: 700; }
     .stat-lbl { font-size: 10px; color: #888; margin-top: 2px; }
-    .section-lbl { font-size: 11px; color: #999; font-weight: 600; padding: 12px 20px 4px; letter-spacing: 0.05em; }
-    .card { background: #fff; margin: 0 12px 10px; border-radius: 12px; border: 1px solid #e5e5e0; padding: 14px 16px; }
-    .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-bottom: 6px; }
-    .card-title { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-    .card-frota { font-size: 13px; color: #555; margin-bottom: 4px; }
-    .card-detail { font-size: 12px; color: #777; background: #f9f9f7; border-radius: 6px; padding: 7px 10px; margin-top: 8px; line-height: 1.5; }
+    .filters { display: flex; gap: 8px; padding: 0 12px 12px; flex-wrap: wrap; }
+    .filter-btn { height: 32px; padding: 0 14px; border-radius: 99px; border: 1.5px solid #ddd; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; color: #555; transition: all 0.15s; }
+    .filter-btn:hover { border-color: #aaa; }
+    .filter-btn.active { color: #fff; border-color: transparent; }
+    .filter-btn[data-filter="todos"].active      { background: #444; }
+    .filter-btn[data-filter="programado"].active { background: #185FA5; }
+    .filter-btn[data-filter="andamento"].active  { background: #854F0B; }
+    .filter-btn[data-filter="concluido"].active  { background: #3B6D11; }
+    .filter-btn[data-filter="pendente"].active   { background: #A32D2D; }
+    .section-lbl { font-size: 11px; color: #999; font-weight: 600; padding: 4px 20px 8px; letter-spacing: 0.05em; }
+    .card { background: #fff; margin: 0 12px 10px; border-radius: 12px; border: 1px solid #e5e5e0; overflow: hidden; }
+    .card-frota-bar { padding: 10px 16px 8px; border-bottom: 1px solid #f0f0ec; display: flex; align-items: center; justify-content: space-between; }
+    .frota-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
+    .frota-num { font-size: 22px; font-weight: 700; color: #1a1a1a; letter-spacing: 0.02em; }
+    .card-date-id { font-size: 11px; color: #aaa; text-align: right; }
+    .card-body { padding: 10px 16px 14px; }
+    .card-title { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; line-height: 1.4; }
+    .card-odometro { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .card-detail { font-size: 12px; color: #666; background: #f9f9f7; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; line-height: 1.7; }
     .card-detail span { display: block; }
-    .card-obs { font-size: 12px; color: #555; background: #fff8e1; border-left: 3px solid #EF9F27; border-radius: 0 6px 6px 0; padding: 7px 10px; margin-top: 8px; }
-    .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 6px; }
+    .card-obs { font-size: 12px; color: #555; background: #fff8e1; border-left: 3px solid #EF9F27; border-radius: 0 6px 6px 0; padding: 7px 10px; margin-bottom: 8px; }
+    .card-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
     .badge { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 99px; }
-    .badge-Recebido     { background: #f0f0f0; color: #555; }
-    .badge-Programado   { background: #E6F1FB; color: #185FA5; }
-    .badge-andamento    { background: #FAEEDA; color: #854F0B; }
-    .badge-Concluído    { background: #EAF3DE; color: #3B6D11; }
-    .badge-Pendente     { background: #FCEBEB; color: #A32D2D; }
+    .badge-recebido   { background: #f0f0f0; color: #555; }
+    .badge-programado { background: #E6F1FB; color: #185FA5; }
+    .badge-andamento  { background: #FAEEDA; color: #854F0B; }
+    .badge-concluido  { background: #EAF3DE; color: #3B6D11; }
+    .badge-pendente   { background: #FCEBEB; color: #A32D2D; }
     .prioridade { font-size: 11px; padding: 3px 8px; border-radius: 99px; }
-    .prio-Alta   { background: #FCEBEB; color: #A32D2D; }
-    .prio-Media  { background: #FAEEDA; color: #854F0B; }
-    .prio-Baixa  { background: #EAF3DE; color: #3B6D11; }
-    .liberado-sim { font-size: 12px; color: #3B6D11; font-weight: 500; }
+    .prio-alta  { background: #FCEBEB; color: #A32D2D; }
+    .prio-media { background: #FAEEDA; color: #854F0B; }
+    .prio-baixa { background: #EAF3DE; color: #3B6D11; }
+    .liberado-sim { font-size: 12px; color: #3B6D11; font-weight: 600; }
     .empty { text-align: center; padding: 50px 20px; color: #999; font-size: 14px; line-height: 1.6; }
     .spinner { text-align: center; padding: 40px; color: #999; font-size: 14px; }
+    .no-filter { text-align: center; padding: 30px 20px; color: #bbb; font-size: 13px; }
     .footer { text-align: center; padding: 20px; font-size: 11px; color: #bbb; }
   </style>
 </head>
@@ -58,11 +74,32 @@
     <button onclick="buscar()">Buscar minhas solicitações</button>
   </div>
 
-  <div class="stats" id="stats" style="display:none">
-    <div class="stat"><div class="stat-num" id="n-prog" style="color:#185FA5">0</div><div class="stat-lbl">Programado</div></div>
-    <div class="stat"><div class="stat-num" id="n-and" style="color:#854F0B">0</div><div class="stat-lbl">Andamento</div></div>
-    <div class="stat"><div class="stat-num" id="n-conc" style="color:#3B6D11">0</div><div class="stat-lbl">Concluído</div></div>
-    <div class="stat"><div class="stat-num" id="n-pend" style="color:#A32D2D">0</div><div class="stat-lbl">Pendente</div></div>
+  <div id="stats" style="display:none">
+    <div class="stats">
+      <div class="stat" onclick="setFiltro('programado')" id="stat-prog">
+        <div class="stat-num" style="color:#185FA5" id="n-prog">0</div>
+        <div class="stat-lbl">Programado</div>
+      </div>
+      <div class="stat" onclick="setFiltro('andamento')" id="stat-and">
+        <div class="stat-num" style="color:#854F0B" id="n-and">0</div>
+        <div class="stat-lbl">Andamento</div>
+      </div>
+      <div class="stat" onclick="setFiltro('concluido')" id="stat-conc">
+        <div class="stat-num" style="color:#3B6D11" id="n-conc">0</div>
+        <div class="stat-lbl">Concluído</div>
+      </div>
+      <div class="stat" onclick="setFiltro('pendente')" id="stat-pend">
+        <div class="stat-num" style="color:#A32D2D" id="n-pend">0</div>
+        <div class="stat-lbl">Pendente</div>
+      </div>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos')">Todos</button>
+      <button class="filter-btn" data-filter="programado" onclick="setFiltro('programado')">Programado</button>
+      <button class="filter-btn" data-filter="andamento" onclick="setFiltro('andamento')">Em andamento</button>
+      <button class="filter-btn" data-filter="concluido" onclick="setFiltro('concluido')">Concluído</button>
+      <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente')">Pendente</button>
+    </div>
   </div>
 
   <div id="results">
@@ -73,22 +110,88 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwfzS3_UA3Y_uJ4UFL2qyc8Gx7G37S5-vM5d1WSG4ox2gUSQ6L5l_QslIE4nbjQoSyMDw/exec";
+    let todasSolicitacoes = [];
+    let filtroAtivo = "todos";
 
-    function getBadgeClass(status) {
-      if (!status) return "badge-Recebido";
+    function getStatusKey(status) {
+      if (!status) return "recebido";
       const s = status.toLowerCase();
-      if (s.includes("andamento")) return "badge-andamento";
-      if (s.includes("programado")) return "badge-Programado";
-      if (s.includes("conclu")) return "badge-Concluído";
-      if (s.includes("pendente")) return "badge-Pendente";
-      return "badge-Recebido";
+      if (s.includes("andamento")) return "andamento";
+      if (s.includes("programado")) return "programado";
+      if (s.includes("conclu")) return "concluido";
+      if (s.includes("pendente")) return "pendente";
+      return "recebido";
     }
 
     function getPrioClass(p) {
       if (!p) return "";
-      if (p.toLowerCase().includes("alt")) return "prio-Alta";
-      if (p.toLowerCase().includes("med")) return "prio-Media";
-      return "prio-Baixa";
+      const pl = p.toLowerCase();
+      if (pl.includes("alt")) return "prio-alta";
+      if (pl.includes("med")) return "prio-media";
+      return "prio-baixa";
+    }
+
+    function setFiltro(filtro) {
+      filtroAtivo = filtro;
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.filter === filtro);
+      });
+      const statMap = { programado: "stat-prog", andamento: "stat-and", concluido: "stat-conc", pendente: "stat-pend" };
+      document.querySelectorAll(".stat").forEach(el => el.classList.remove("active-filter"));
+      if (statMap[filtro]) document.getElementById(statMap[filtro]).classList.add("active-filter");
+      renderCards();
+    }
+
+    function renderCards() {
+      const res = document.getElementById("results");
+      const lista = filtroAtivo === "todos"
+        ? todasSolicitacoes
+        : todasSolicitacoes.filter(d => getStatusKey(d.status) === filtroAtivo);
+
+      if (!lista.length) {
+        res.innerHTML = '<div class="no-filter">Nenhuma solicitação com este status.</div>';
+        return;
+      }
+
+      const nome = todasSolicitacoes[0]?.nome ? todasSolicitacoes[0].nome.split(" ")[0] : "";
+      res.innerHTML =
+        `<div class="section-lbl">OLÁ${nome ? ", " + nome.toUpperCase() : ""} — ${lista.length} SOLICITAÇÃO${lista.length !== 1 ? "ÕES" : ""}</div>` +
+        lista.map(d => {
+          const sk = getStatusKey(d.status);
+          const hasDetail = d.tecnico || d.dataProgramada || d.dataConclusao || d.tempo;
+          return `
+            <div class="card">
+              <div class="card-frota-bar">
+                <div>
+                  <div class="frota-label">Nº de Frota</div>
+                  <div class="frota-num">${d.frota || "—"}</div>
+                </div>
+                <div class="card-date-id">
+                  <div>#${String(d.id).padStart(4, "0")}</div>
+                  <div>${d.dataCadastro}</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">${d.problema || "Solicitação de serviço"}</div>
+                ${d.odometro ? `<div class="card-odometro">Odômetro: ${d.odometro} km</div>` : ""}
+                ${hasDetail ? `
+                  <div class="card-detail">
+                    ${d.tecnico ? `<span>Técnico: <strong>${d.tecnico}</strong></span>` : ""}
+                    ${d.dataProgramada ? `<span>Data programada: <strong>${d.dataProgramada}</strong></span>` : ""}
+                    ${d.dataConclusao ? `<span>Concluído em: <strong>${d.dataConclusao}</strong></span>` : ""}
+                    ${d.tempo ? `<span>Prazo estimado: <strong>${d.tempo} dia${d.tempo != 1 ? "s" : ""}</strong></span>` : ""}
+                  </div>` : ""}
+                ${d.observacoes ? `<div class="card-obs">💬 ${d.observacoes}</div>` : ""}
+                <div class="card-bottom">
+                  <span class="badge badge-${sk}">${d.status || "Recebido"}</span>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    ${d.prioridade ? `<span class="prioridade ${getPrioClass(d.prioridade)}">${d.prioridade}</span>` : ""}
+                    ${(d.liberado || "").toString().toLowerCase().includes("sim") ? '<span class="liberado-sim">✓ Liberado</span>' : ""}
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        }).join("");
     }
 
     async function buscar() {
@@ -99,6 +202,8 @@
       const statsEl = document.getElementById("stats");
       res.innerHTML = '<div class="spinner">Buscando suas solicitações...</div>';
       statsEl.style.display = "none";
+      todasSolicitacoes = [];
+      filtroAtivo = "todos";
 
       try {
         const resp = await fetch(API_URL + "?email=" + encodeURIComponent(email));
@@ -109,48 +214,34 @@
           return;
         }
 
+        todasSolicitacoes = data.sort(function(a, b) {
+          if (a.dataCadastroRaw && b.dataCadastroRaw) {
+            return b.dataCadastroRaw - a.dataCadastroRaw;
+          }
+          return b.id - a.id;
+        });
+
         let prog = 0, and = 0, conc = 0, pend = 0;
         data.forEach(d => {
-          const s = (d.status || "").toLowerCase();
-          if (s.includes("programado")) prog++;
-          else if (s.includes("andamento")) and++;
-          else if (s.includes("conclu")) conc++;
-          else if (s.includes("pendente")) pend++;
+          const s = getStatusKey(d.status);
+          if (s === "programado") prog++;
+          else if (s === "andamento") and++;
+          else if (s === "concluido") conc++;
+          else if (s === "pendente") pend++;
         });
         document.getElementById("n-prog").textContent = prog;
         document.getElementById("n-and").textContent = and;
         document.getElementById("n-conc").textContent = conc;
         document.getElementById("n-pend").textContent = pend;
-        statsEl.style.display = "grid";
+        statsEl.style.display = "block";
 
-        const nome = data[0].nome ? data[0].nome.split(" ")[0] : "";
-        res.innerHTML = '<div class="section-lbl">OLÁ' + (nome ? ', ' + nome.toUpperCase() : '') + ' — SUAS SOLICITAÇÕES</div>' +
-          data.map(d => `
-            <div class="card">
-              <div class="card-meta">
-                <span>#${String(d.id).padStart(4,'0')} · ${d.dataCadastro}</span>
-                <span>Frota: <strong>${d.frota}</strong></span>
-              </div>
-              <div class="card-title">${d.problema || "Solicitação de serviço"}</div>
-              ${d.odometro ? `<div class="card-frota">Odômetro: ${d.odometro} km</div>` : ""}
-              <div class="card-detail">
-                ${d.tecnico ? `<span>Técnico: <strong>${d.tecnico}</strong></span>` : ""}
-                ${d.dataProgramada ? `<span>Data programada: <strong>${d.dataProgramada}</strong></span>` : ""}
-                ${d.dataConclusao ? `<span>Concluído em: <strong>${d.dataConclusao}</strong></span>` : ""}
-                ${d.tempo ? `<span>Prazo estimado: <strong>${d.tempo} dias</strong></span>` : ""}
-              </div>
-              ${d.observacoes ? `<div class="card-obs">💬 ${d.observacoes}</div>` : ""}
-              <div class="card-bottom">
-                <span class="badge ${getBadgeClass(d.status)}">${d.status || "Recebido"}</span>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  ${d.prioridade ? `<span class="prioridade ${getPrioClass(d.prioridade)}">${d.prioridade}</span>` : ""}
-                  ${(d.liberado || "").toString().toLowerCase().includes("sim") ? '<span class="liberado-sim">✓ Veículo liberado</span>' : ""}
-                </div>
-              </div>
-            </div>
-          `).join("");
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.filter === "todos");
+        });
 
-      } catch(e) {
+        renderCards();
+
+      } catch (e) {
         res.innerHTML = '<div class="empty">Erro ao buscar dados. Verifique sua conexão e tente novamente.</div>';
       }
     }
