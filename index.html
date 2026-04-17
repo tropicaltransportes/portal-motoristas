@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal do Motorista</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; min-height: 100vh; }
+    .header { background: #fff; padding: 20px; border-bottom: 1px solid #e5e5e0; }
+    .header h1 { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+    .header p { font-size: 13px; color: #888; margin-top: 3px; }
+    .search-area { background: #fff; padding: 16px 20px; border-bottom: 1px solid #e5e5e0; }
+    .search-area label { font-size: 12px; color: #888; display: block; margin-bottom: 6px; }
+    .search-area input { width: 100%; height: 42px; border: 1px solid #ddd; border-radius: 8px; padding: 0 12px; font-size: 14px; margin-bottom: 8px; outline: none; }
+    .search-area input:focus { border-color: #1D9E75; }
+    .search-area button { width: 100%; height: 42px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; }
+    .search-area button:active { background: #178a65; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px; }
+    .stat { background: #fff; border-radius: 10px; padding: 10px 6px; text-align: center; border: 1px solid #e5e5e0; }
+    .stat-num { font-size: 22px; font-weight: 600; }
+    .stat-lbl { font-size: 10px; color: #888; margin-top: 2px; }
+    .section-lbl { font-size: 11px; color: #999; font-weight: 600; padding: 12px 20px 4px; letter-spacing: 0.05em; }
+    .card { background: #fff; margin: 0 12px 10px; border-radius: 12px; border: 1px solid #e5e5e0; padding: 14px 16px; }
+    .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-bottom: 6px; }
+    .card-title { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+    .card-frota { font-size: 13px; color: #555; margin-bottom: 4px; }
+    .card-detail { font-size: 12px; color: #777; background: #f9f9f7; border-radius: 6px; padding: 7px 10px; margin-top: 8px; line-height: 1.5; }
+    .card-detail span { display: block; }
+    .card-obs { font-size: 12px; color: #555; background: #fff8e1; border-left: 3px solid #EF9F27; border-radius: 0 6px 6px 0; padding: 7px 10px; margin-top: 8px; }
+    .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 6px; }
+    .badge { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 99px; }
+    .badge-Recebido     { background: #f0f0f0; color: #555; }
+    .badge-Programado   { background: #E6F1FB; color: #185FA5; }
+    .badge-andamento    { background: #FAEEDA; color: #854F0B; }
+    .badge-Concluído    { background: #EAF3DE; color: #3B6D11; }
+    .badge-Pendente     { background: #FCEBEB; color: #A32D2D; }
+    .prioridade { font-size: 11px; padding: 3px 8px; border-radius: 99px; }
+    .prio-Alta   { background: #FCEBEB; color: #A32D2D; }
+    .prio-Media  { background: #FAEEDA; color: #854F0B; }
+    .prio-Baixa  { background: #EAF3DE; color: #3B6D11; }
+    .liberado-sim { font-size: 12px; color: #3B6D11; font-weight: 500; }
+    .empty { text-align: center; padding: 50px 20px; color: #999; font-size: 14px; line-height: 1.6; }
+    .spinner { text-align: center; padding: 40px; color: #999; font-size: 14px; }
+    .footer { text-align: center; padding: 20px; font-size: 11px; color: #bbb; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Portal do Motorista</h1>
+    <p>Acompanhe o status das suas solicitações de serviço</p>
+  </div>
+
+  <div class="search-area">
+    <label>Digite o e-mail que você usou no formulário</label>
+    <input type="email" id="emailInput" placeholder="seu@email.com" />
+    <button onclick="buscar()">Buscar minhas solicitações</button>
+  </div>
+
+  <div class="stats" id="stats" style="display:none">
+    <div class="stat"><div class="stat-num" id="n-prog" style="color:#185FA5">0</div><div class="stat-lbl">Programado</div></div>
+    <div class="stat"><div class="stat-num" id="n-and" style="color:#854F0B">0</div><div class="stat-lbl">Andamento</div></div>
+    <div class="stat"><div class="stat-num" id="n-conc" style="color:#3B6D11">0</div><div class="stat-lbl">Concluído</div></div>
+    <div class="stat"><div class="stat-num" id="n-pend" style="color:#A32D2D">0</div><div class="stat-lbl">Pendente</div></div>
+  </div>
+
+  <div id="results">
+    <div class="empty">Insira seu e-mail acima para ver suas solicitações.</div>
+  </div>
+
+  <div class="footer">Portal de Solicitações de Serviço</div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwfzS3_UA3Y_uJ4UFL2qyc8Gx7G37S5-vM5d1WSG4ox2gUSQ6L5l_QslIE4nbjQoSyMDw/exec";
+
+    function getBadgeClass(status) {
+      if (!status) return "badge-Recebido";
+      const s = status.toLowerCase();
+      if (s.includes("andamento")) return "badge-andamento";
+      if (s.includes("programado")) return "badge-Programado";
+      if (s.includes("conclu")) return "badge-Concluído";
+      if (s.includes("pendente")) return "badge-Pendente";
+      return "badge-Recebido";
+    }
+
+    function getPrioClass(p) {
+      if (!p) return "";
+      if (p.toLowerCase().includes("alt")) return "prio-Alta";
+      if (p.toLowerCase().includes("med")) return "prio-Media";
+      return "prio-Baixa";
+    }
+
+    async function buscar() {
+      const email = document.getElementById("emailInput").value.trim();
+      if (!email) { alert("Por favor, insira seu e-mail."); return; }
+
+      const res = document.getElementById("results");
+      const statsEl = document.getElementById("stats");
+      res.innerHTML = '<div class="spinner">Buscando suas solicitações...</div>';
+      statsEl.style.display = "none";
+
+      try {
+        const resp = await fetch(API_URL + "?email=" + encodeURIComponent(email));
+        const data = await resp.json();
+
+        if (!data.length) {
+          res.innerHTML = '<div class="empty">Nenhuma solicitação encontrada para este e-mail.<br><small>Verifique se digitou o mesmo e-mail usado no formulário.</small></div>';
+          return;
+        }
+
+        let prog = 0, and = 0, conc = 0, pend = 0;
+        data.forEach(d => {
+          const s = (d.status || "").toLowerCase();
+          if (s.includes("programado")) prog++;
+          else if (s.includes("andamento")) and++;
+          else if (s.includes("conclu")) conc++;
+          else if (s.includes("pendente")) pend++;
+        });
+        document.getElementById("n-prog").textContent = prog;
+        document.getElementById("n-and").textContent = and;
+        document.getElementById("n-conc").textContent = conc;
+        document.getElementById("n-pend").textContent = pend;
+        statsEl.style.display = "grid";
+
+        const nome = data[0].nome ? data[0].nome.split(" ")[0] : "";
+        res.innerHTML = '<div class="section-lbl">OLÁ' + (nome ? ', ' + nome.toUpperCase() : '') + ' — SUAS SOLICITAÇÕES</div>' +
+          data.map(d => `
+            <div class="card">
+              <div class="card-meta">
+                <span>#${String(d.id).padStart(4,'0')} · ${d.dataCadastro}</span>
+                <span>Frota: <strong>${d.frota}</strong></span>
+              </div>
+              <div class="card-title">${d.problema || "Solicitação de serviço"}</div>
+              ${d.odometro ? `<div class="card-frota">Odômetro: ${d.odometro} km</div>` : ""}
+              <div class="card-detail">
+                ${d.tecnico ? `<span>Técnico: <strong>${d.tecnico}</strong></span>` : ""}
+                ${d.dataProgramada ? `<span>Data programada: <strong>${d.dataProgramada}</strong></span>` : ""}
+                ${d.dataConclusao ? `<span>Concluído em: <strong>${d.dataConclusao}</strong></span>` : ""}
+                ${d.tempo ? `<span>Prazo estimado: <strong>${d.tempo} dias</strong></span>` : ""}
+              </div>
+              ${d.observacoes ? `<div class="card-obs">💬 ${d.observacoes}</div>` : ""}
+              <div class="card-bottom">
+                <span class="badge ${getBadgeClass(d.status)}">${d.status || "Recebido"}</span>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  ${d.prioridade ? `<span class="prioridade ${getPrioClass(d.prioridade)}">${d.prioridade}</span>` : ""}
+                  ${(d.liberado || "").toString().toLowerCase().includes("sim") ? '<span class="liberado-sim">✓ Veículo liberado</span>' : ""}
+                </div>
+              </div>
+            </div>
+          `).join("");
+
+      } catch(e) {
+        res.innerHTML = '<div class="empty">Erro ao buscar dados. Verifique sua conexão e tente novamente.</div>';
+      }
+    }
+
+    document.getElementById("emailInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") buscar();
+    });
+  </script>
+</body>
+</html>
