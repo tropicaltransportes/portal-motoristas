@@ -214,11 +214,16 @@
           return;
         }
 
+        function parseDataBR(str) {
+          if (!str) return 0;
+          var p = str.split(/[\/,\s:]/);
+          if (p.length >= 3) return new Date(+p[2], +p[1]-1, +p[0]).getTime();
+          return 0;
+        }
         todasSolicitacoes = data.sort(function(a, b) {
-          if (a.dataCadastroRaw && b.dataCadastroRaw) {
-            return b.dataCadastroRaw - a.dataCadastroRaw;
-          }
-          return b.id - a.id;
+          var ra = Number(a.dataCadastroRaw) || parseDataBR(a.dataCadastro) || Number(a.id);
+          var rb = Number(b.dataCadastroRaw) || parseDataBR(b.dataCadastro) || Number(b.id);
+          return rb - ra;
         });
 
         let prog = 0, and = 0, conc = 0, pend = 0;
