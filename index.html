@@ -332,8 +332,8 @@
       trocarBtn.hidden = true;
       app.innerHTML = `
         <section class="entrada">
-          <h1>Em que pé está o seu veículo?</h1>
-          <p>Veja a Situação das Solicitações que você abriu e o recado da manutenção.</p>
+          <h1>Acompanhe suas Solicitações de Serviço</h1>
+          <p>Consulte a Situação de cada Solicitação, a Previsão de Liberação e as Observações da manutenção.</p>
           <form id="formEmail" novalidate>
             <label for="emailInput">Seu e-mail (o mesmo do formulário)</label>
             <input class="campo" id="emailInput" type="email" inputmode="email" autocomplete="email"
@@ -344,11 +344,11 @@
           </form>
         </section>
         <section class="como">
-          <h2>O caminho de cada Solicitação</h2>
+          <h2>Etapas de uma Solicitação</h2>
           <ol class="trilho">
-            ${[["Recebida", "A manutenção recebeu o seu pedido."],
-               ["Programada", "Já tem data marcada para o serviço."],
-               ["Em andamento", "O serviço começou. Pode parar em Aguardando peça."],
+            ${[["Recebida", "A Solicitação foi recebida pela manutenção."],
+               ["Programada", "O serviço tem data programada."],
+               ["Em andamento", "O serviço foi iniciado. Pode ficar em Aguardando peça."],
                ["Finalizada", "Serviço concluído."]].map(([n, t], i) => `
               <li class="etapa" style="--i:${i}">
                 <span class="marco">${icone("check")}</span>
@@ -435,8 +435,8 @@
       return `
         ${!FECHADAS.includes(situacaoDe(d).nome) && d.previsaoLiberacao ? `
           <div class="previsao">${icone("cal")}<span>Previsão de liberação <b class="mono">${esc(d.previsaoLiberacao)}</b></span></div>` : ""}
-        ${d.veiculoLiberado ? `<div class="liberado"><span class="bola">${icone("check")}</span>Veículo liberado: pode rodar</div>` : ""}
-        ${d.problema ? `<div class="relato"><div class="relato-lbl">O que você relatou</div>${esc(d.problema)}</div>` : ""}
+        ${d.veiculoLiberado ? `<div class="liberado"><span class="bola">${icone("check")}</span>Veículo liberado para uso</div>` : ""}
+        ${d.problema ? `<div class="relato"><div class="relato-lbl">Problema relatado</div>${esc(d.problema)}</div>` : ""}
         ${renderTrilho(d)}`;
     }
 
@@ -499,7 +499,7 @@
           ${abertas.map(renderAberta).join("")}
           ${fechadas.map(renderFechada).join("")}
         </div>
-        ${!lista.length ? `<section class="estado">${icone("vazio")}<h2>Nada por aqui</h2><p>Nenhuma Solicitação aberta nem dos últimos 30 dias.</p></section>` : ""}
+        ${!lista.length ? `<section class="estado">${icone("vazio")}<h2>Nenhuma Solicitação para exibir</h2><p>Nenhuma Solicitação aberta nem dos últimos 30 dias.</p></section>` : ""}
         ${historico}`;
       animar = false;
 
@@ -531,7 +531,7 @@
     async function buscar(emailBruto) {
       const email = String(emailBruto || "").trim();
       if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        telaEntrada(email, email ? "Confira o e-mail: parece que falta alguma parte." : "Digite o seu e-mail para continuar.");
+        telaEntrada(email, email ? "E-mail inválido. Verifique o endereço digitado." : "Informe o seu e-mail para continuar.");
         document.getElementById("emailInput").focus();
         return;
       }
@@ -544,7 +544,7 @@
         "Buscando suas Solicitações", `<span class="mono">${esc(email)}</span>`);
       const lenta = setTimeout(() => {
         const p = app.querySelector(".estado p");
-        if (p) p.insertAdjacentHTML("afterend", '<p class="lenta">A conexão está lenta. Aguarde mais um pouco.</p>');
+        if (p) p.insertAdjacentHTML("afterend", '<p class="lenta">A conexão está lenta. Por favor, aguarde.</p>');
       }, 6000);
 
       const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
@@ -559,7 +559,7 @@
         if (!lista.length) {
           salvarEmail("");
           telaEstado(icone("vazio"), "Nenhuma Solicitação encontrada",
-            `Não achamos nada para <span class="mono">${esc(email)}</span>. Confira se é o mesmo e-mail que você usou no formulário.`,
+            `Não há Solicitações para <span class="mono">${esc(email)}</span>. Verifique se é o mesmo e-mail informado no formulário.`,
             '<button class="btn btn-sec" type="button" id="outroEmail">Usar outro e-mail</button>');
           document.getElementById("outroEmail").addEventListener("click", () => trocarBtn.click());
           return;
@@ -573,9 +573,9 @@
         renderTudo();
       } catch (e) {
         if (minha !== buscaAtual) return;
-        telaEstado(icone("alerta"), "Não deu para carregar",
-          "Pode ser a internet. Confira o sinal e tente de novo.",
-          '<button class="btn" type="button" id="tentarBtn">Tentar de novo</button>');
+        telaEstado(icone("alerta"), "Não foi possível carregar",
+          "Verifique a sua conexão com a internet e tente novamente.",
+          '<button class="btn" type="button" id="tentarBtn">Tentar novamente</button>');
         document.getElementById("tentarBtn").addEventListener("click", () => buscar(email));
       } finally {
         if (minha === buscaAtual) abortarBusca = null;

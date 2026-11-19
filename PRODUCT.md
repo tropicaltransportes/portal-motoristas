@@ -36,7 +36,7 @@ Mostrar ao Motorista a Situação das Solicitações de Serviço que ele abriu, 
 ## Brand Commitments
 
 - Logo da Tropical Transportes e as cores da marca (verde e navy) são obrigatórios.
-- Idioma: português do Brasil, linguagem direta.
+- Idioma: português do Brasil, em **tom formal e direto**: sem gírias nem expressões coloquiais ("em que pé está", "pode rodar", "não deu"). Use frases claras e curtas, como "Acompanhe suas Solicitações de Serviço" e "Veículo liberado para uso".
 
 ## Product Principles
 
