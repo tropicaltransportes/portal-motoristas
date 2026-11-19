@@ -45,6 +45,7 @@
     }
     ::selection { background: var(--green-vivid); color: var(--navy); }
     :focus-visible { outline: 3px solid var(--green-vivid); outline-offset: 2px; border-radius: 6px; }
+    [hidden] { display: none !important; }
     button { font: inherit; color: inherit; cursor: pointer; }
     .icon { width: 1em; height: 1em; flex-shrink: 0; }
     .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
@@ -293,6 +294,8 @@
     let veiculoAtivo = "todos";
     let mostrarHistorico = false;
     let animar = true;
+    let buscaAtual = 0;         // só a busca mais recente pode mexer na tela
+    let abortarBusca = null;
 
     const app = document.getElementById("app");
     const veiculosNav = document.getElementById("veiculos");
@@ -513,7 +516,13 @@
       window.scrollTo({ top: 0 });
     });
 
+    function cancelarBusca() {
+      buscaAtual++;
+      if (abortarBusca) { abortarBusca(); abortarBusca = null; }
+    }
+
     trocarBtn.addEventListener("click", () => {
+      cancelarBusca();
       salvarEmail("");
       telaEntrada("");
       document.getElementById("emailInput").focus();
@@ -527,6 +536,8 @@
         return;
       }
 
+      cancelarBusca();
+      const minha = buscaAtual;
       veiculosNav.hidden = true;
       trocarBtn.hidden = false;
       telaEstado(`<svg class="icon girando" aria-hidden="true"><use href="#i-roda"/></svg>`,
@@ -537,12 +548,14 @@
       }, 6000);
 
       const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+      if (ctrl) abortarBusca = () => ctrl.abort();
       const limite = ctrl ? setTimeout(() => ctrl.abort(), 40000) : null;
 
       try {
         const resp = await fetch(API_URL + "?email=" + encodeURIComponent(email), ctrl ? { signal: ctrl.signal } : {});
         const data = await resp.json();
         const lista = Array.isArray(data) ? data : (data.solicitacoes || []);
+        if (minha !== buscaAtual) return;
         if (!lista.length) {
           salvarEmail("");
           telaEstado(icone("vazio"), "Nenhuma Solicitação encontrada",
@@ -559,11 +572,13 @@
         animar = true;
         renderTudo();
       } catch (e) {
+        if (minha !== buscaAtual) return;
         telaEstado(icone("alerta"), "Não deu para carregar",
           "Pode ser a internet. Confira o sinal e tente de novo.",
           '<button class="btn" type="button" id="tentarBtn">Tentar de novo</button>');
         document.getElementById("tentarBtn").addEventListener("click", () => buscar(email));
       } finally {
+        if (minha === buscaAtual) abortarBusca = null;
         clearTimeout(lenta);
         if (limite) clearTimeout(limite);
       }
