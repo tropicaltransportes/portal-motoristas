@@ -186,7 +186,7 @@
     .stat-card.active { border-color: var(--stat-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--stat-color) 15%, transparent); }
     .stat-card.active::after { opacity: 1; }
     .stat-num { font-size: 24px; font-weight: 700; color: var(--stat-color); line-height: 1; }
-    .stat-lbl { font-size: 9.5px; color: var(--gray); margin-top: 3px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+    .stat-lbl { font-size: 9px; color: var(--gray); margin-top: 3px; font-weight: 500; letter-spacing: 0; text-transform: uppercase; overflow-wrap: anywhere; }
 
     /* ── FILTROS ── */
     .filters-wrap { padding: 0 16px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
@@ -364,24 +364,58 @@
       background: currentColor;
       opacity: 0.7;
     }
-    .badge-recebido    { background: #f0f2f0; color: #585E63; }
-    .badge-programado  { background: #e6f1fb; color: #1557a0; }
+    .badge-recebida    { background: #f0f2f0; color: #585E63; }
+    .badge-programada  { background: #e6f1fb; color: #1557a0; }
     .badge-andamento   { background: #fff3e0; color: #b45309; }
-    .badge-concluido   { background: #e8f5e9; color: #1b6b27; }
-    .badge-pendente    { background: #fde8e8; color: #b91c1c; }
+    .badge-aguardando  { background: #fde8e8; color: #b91c1c; }
+    .badge-finalizada  { background: #e8f5e9; color: #1b6b27; }
+    .badge-cancelada   { background: #eceff1; color: #455a64; text-decoration: line-through; }
 
-    /* ── PRIORIDADE ── */
-    .prio {
-      font-size: 10.5px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 99px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .card-atualizado {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 8px;
     }
-    .prio-alta  { background: #fde8e8; color: #b91c1c; }
-    .prio-media { background: #fff3e0; color: #b45309; }
-    .prio-baixa { background: #e8f5e9; color: #1b6b27; }
+
+    /* ── RECADO DA MANUTENÇÃO ── */
+    .card-recado {
+      background: var(--mint);
+      border: 1px solid #bfe8cb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .card-recado-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+    }
+    .card-recado-txt {
+      font-size: 13px;
+      color: var(--navy);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    /* ── HISTÓRICO ── */
+    .historico-wrap { padding: 4px 16px 8px; }
+    .historico-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      border: 1.5px dashed var(--card-border);
+      background: transparent;
+      color: var(--navy);
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .historico-btn:hover { border-color: var(--green-mid); color: var(--green-mid); }
+    .card-title { white-space: pre-line; }
 
     .liberado {
       font-size: 11px;
@@ -447,7 +481,7 @@
   <!-- HERO SEARCH -->
   <div class="hero">
     <div class="hero-title">Minhas Solicitações</div>
-    <div class="hero-sub">Acompanhe o status dos seus pedidos de serviço</div>
+    <div class="hero-sub">Acompanhe a situação dos seus pedidos de serviço</div>
     <div class="search-box">
       <label>Seu e-mail cadastrado no formulário</label>
       <div class="search-row">
@@ -457,35 +491,29 @@
     </div>
   </div>
 
-  <!-- STATS + FILTROS -->
+  <!-- FILTROS -->
   <div id="statsBlock" style="display:none">
     <div class="stats-wrap">
       <div class="stats-grid">
-        <div class="stat-card" style="--stat-color:#1557a0" id="stat-prog" onclick="setFiltro('programado')">
-          <div class="stat-num" id="n-prog">0</div>
-          <div class="stat-lbl">Programado</div>
+        <div class="stat-card" style="--stat-color:#1557a0" data-stat="programada" onclick="setFiltro('programada')">
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">Programada</div>
         </div>
-        <div class="stat-card" style="--stat-color:#b45309" id="stat-and" onclick="setFiltro('andamento')">
-          <div class="stat-num" id="n-and">0</div>
+        <div class="stat-card" style="--stat-color:#b45309" data-stat="andamento" onclick="setFiltro('andamento')">
+          <div class="stat-num">0</div>
           <div class="stat-lbl">Andamento</div>
         </div>
-        <div class="stat-card" style="--stat-color:#1b6b27" id="stat-conc" onclick="setFiltro('concluido')">
-          <div class="stat-num" id="n-conc">0</div>
-          <div class="stat-lbl">Concluído</div>
+        <div class="stat-card" style="--stat-color:#b91c1c" data-stat="aguardando" onclick="setFiltro('aguardando')">
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">Aguard. peça</div>
         </div>
-        <div class="stat-card" style="--stat-color:#b91c1c" id="stat-pend" onclick="setFiltro('pendente')">
-          <div class="stat-num" id="n-pend">0</div>
-          <div class="stat-lbl">Pendente</div>
+        <div class="stat-card" style="--stat-color:#1b6b27" data-stat="finalizada" onclick="setFiltro('finalizada')">
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">Finalizada</div>
         </div>
       </div>
     </div>
-    <div class="filters-wrap">
-      <button class="filter-pill active" style="--pill-color:var(--navy)" data-filter="todos" onclick="setFiltro('todos')">Todos</button>
-      <button class="filter-pill" style="--pill-color:#1557a0" data-filter="programado" onclick="setFiltro('programado')">Programado</button>
-      <button class="filter-pill" style="--pill-color:#b45309" data-filter="andamento" onclick="setFiltro('andamento')">Em andamento</button>
-      <button class="filter-pill" style="--pill-color:#1b6b27" data-filter="concluido" onclick="setFiltro('concluido')">Concluído</button>
-      <button class="filter-pill" style="--pill-color:#b91c1c" data-filter="pendente" onclick="setFiltro('pendente')">Pendente</button>
-    </div>
+    <div class="filters-wrap" id="filtros"></div>
   </div>
 
   <div id="results">
@@ -495,92 +523,150 @@
     </div>
   </div>
 
+  <div class="historico-wrap" id="historicoWrap" style="display:none">
+    <button class="historico-btn" id="historicoBtn" onclick="alternarHistorico()"></button>
+  </div>
+
   <div class="footer">© Tropical Transportes · Portal de Manutenção</div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwfzS3_UA3Y_uJ4UFL2qyc8Gx7G37S5-vM5d1WSG4ox2gUSQ6L5l_QslIE4nbjQoSyMDw/exec";
-    let todasSolicitacoes = [];
-    let filtroAtivo = "todos";
+    // URL do Apps Script publicado como app da Web (veja LEIAME.md).
+    const API_URL = "https://script.google.com/macros/s/AKfycbwzzJpuq-Q8iwjhhasfr0dyXXf60FqpMQWzF_MqlK7MdtOvIIoulsR3R32KoNmimzckFA/exec";
+    const DIAS_RECENTES = 30;
 
-    function getStatusKey(s) {
-      if (!s) return "recebido";
-      const l = s.toLowerCase();
-      if (l.includes("andamento")) return "andamento";
-      if (l.includes("programado")) return "programado";
-      if (l.includes("conclu") || l.includes("finaliz")) return "concluido";
-      if (l.includes("pendente")) return "pendente";
-      return "recebido";
+    // As 6 Situações. A chave é usada nas classes CSS e nos filtros.
+    const SITUACOES = [
+      { nome: "Recebida",        chave: "recebida",   cor: "#585E63" },
+      { nome: "Programada",      chave: "programada", cor: "#1557a0" },
+      { nome: "Em andamento",    chave: "andamento",  cor: "#b45309" },
+      { nome: "Aguardando peça", chave: "aguardando", cor: "#b91c1c" },
+      { nome: "Finalizada",      chave: "finalizada", cor: "#1b6b27" },
+      { nome: "Cancelada",       chave: "cancelada",  cor: "#455a64" }
+    ];
+    const FECHADAS = ["Finalizada", "Cancelada"];
+
+    let todas = [];
+    let filtroAtivo = "todos";
+    let mostrarHistorico = false;
+
+    function chaveDe(situacao) {
+      const s = SITUACOES.find(x => x.nome === situacao);
+      return s ? s.chave : "recebida";
     }
 
-    function parseBR(s) {
-      if (!s) return 0;
-      var d = s.trim().split('/');
-      if (d.length < 3) return 0;
-      var ano = parseInt(d[2].split(',')[0].split(' ')[0], 10);
-      var mes = parseInt(d[1], 10) - 1;
-      var dia = parseInt(d[0], 10);
-      return new Date(ano, mes, dia).getTime();
+    function esc(v) {
+      return String(v == null ? "" : v)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    function ehAberta(d) { return !FECHADAS.includes(d.situacao); }
+
+    // Aberta, ou fechada há no máximo 30 dias.
+    function ehRecente(d) {
+      if (ehAberta(d)) return true;
+      const ref = d.dataConclusaoMs || d.ultimaAtualizacaoMs || d.dataCadastroMs || 0;
+      return ref >= Date.now() - DIAS_RECENTES * 24 * 60 * 60 * 1000;
+    }
+
+    function visiveis() {
+      return mostrarHistorico ? todas : todas.filter(ehRecente);
     }
 
     function setFiltro(filtro) {
       filtroAtivo = filtro;
-      document.querySelectorAll(".filter-pill").forEach(b => b.classList.toggle("active", b.dataset.filter === filtro));
-      const map = { programado:"stat-prog", andamento:"stat-and", concluido:"stat-conc", pendente:"stat-pend" };
-      document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
-      if (map[filtro]) document.getElementById(map[filtro]).classList.add("active");
-      renderCards();
+      renderTudo();
     }
 
-    function renderCards() {
+    function alternarHistorico() {
+      mostrarHistorico = !mostrarHistorico;
+      filtroAtivo = "todos";
+      renderTudo();
+    }
+
+    function renderFiltros(base) {
+      const pills = [{ nome: "Todas", chave: "todos", cor: "var(--navy)" }]
+        .concat(SITUACOES.filter(s => base.some(d => chaveDe(d.situacao) === s.chave)));
+      document.getElementById("filtros").innerHTML = pills.map(p => {
+        const n = p.chave === "todos" ? base.length : base.filter(d => chaveDe(d.situacao) === p.chave).length;
+        return `<button class="filter-pill${filtroAtivo === p.chave ? " active" : ""}" style="--pill-color:${p.cor}"
+                  onclick="setFiltro('${p.chave}')">${esc(p.nome)} · ${n}</button>`;
+      }).join("");
+
+      document.querySelectorAll(".stat-card").forEach(c => {
+        const k = c.dataset.stat;
+        c.querySelector(".stat-num").textContent = base.filter(d => chaveDe(d.situacao) === k).length;
+        c.classList.toggle("active", filtroAtivo === k);
+      });
+    }
+
+    function renderCard(d) {
+      const sk = chaveDe(d.situacao);
+      const detalhes = [
+        d.dataProgramada    && ["Data programada", d.dataProgramada],
+        d.previsaoLiberacao && ["Previsão de liberação", d.previsaoLiberacao],
+        d.dataConclusao     && ["Finalizada em", d.dataConclusao],
+        d.tecnico           && ["Técnico responsável", d.tecnico]
+      ].filter(Boolean);
+
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="frota-group">
+              <div class="frota-eyebrow">Nº de Frota</div>
+              <div class="frota-num">${esc(d.frota || "—")}<span class="frota-accent"></span></div>
+            </div>
+            <div class="card-id-date">
+              <div class="card-id">#${esc(String(d.numero).padStart(4, "0"))}</div>
+              <div class="card-date">${esc(d.dataCadastro)}</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${esc(d.problema || "Solicitação de serviço")}</div>
+            ${d.odometro ? `<div class="card-odo">⬤ ${esc(d.odometro)} km</div>` : ""}
+            ${d.observacoes ? `
+              <div class="card-recado">
+                <div class="card-recado-lbl">💬 Recado da manutenção</div>
+                <div class="card-recado-txt">${esc(d.observacoes)}</div>
+              </div>` : ""}
+            ${detalhes.length ? `<div class="card-detail">${detalhes.map(([rot, val]) =>
+              `<div class="card-detail-row"><span class="dot"></span><span>${rot}: <strong>${esc(val)}</strong></span></div>`
+            ).join("")}</div>` : ""}
+            <div class="card-footer">
+              <span class="badge badge-${sk}">${esc(d.situacao)}</span>
+              ${d.veiculoLiberado ? '<span class="liberado">Veículo liberado</span>' : ""}
+            </div>
+            ${d.ultimaAtualizacao ? `<div class="card-atualizado">Atualizado em ${esc(d.ultimaAtualizacao)}</div>` : ""}
+          </div>
+        </div>`;
+    }
+
+    function renderTudo() {
       const res = document.getElementById("results");
-      const lista = filtroAtivo === "todos"
-        ? todasSolicitacoes
-        : todasSolicitacoes.filter(d => getStatusKey(d.status) === filtroAtivo);
+      const base = visiveis();
+      renderFiltros(base);
+
+      const lista = filtroAtivo === "todos" ? base : base.filter(d => chaveDe(d.situacao) === filtroAtivo);
+      const nome = todas[0] && todas[0].nome ? todas[0].nome.trim().split(" ")[0] : "";
+      const titulo = mostrarHistorico ? "Histórico completo" : "Abertas e últimos 30 dias";
 
       if (!lista.length) {
-        res.innerHTML = '<div class="state-msg"><div class="icon">📭</div><p>Nenhuma solicitação<br>com este status.</p></div>';
-        return;
+        res.innerHTML = `<div class="section-lbl">Olá${nome ? ", " + esc(nome) : ""} · ${titulo}</div>` +
+          '<div class="state-msg"><div class="icon">📭</div><p>' +
+          (base.length ? "Nenhuma solicitação<br>com esta situação." : "Nenhuma solicitação aberta<br>nem dos últimos 30 dias.") +
+          "</p></div>";
+      } else {
+        res.innerHTML =
+          `<div class="section-lbl">Olá${nome ? ", " + esc(nome) : ""} · ${titulo} · ${lista.length} solicitaç${lista.length !== 1 ? "ões" : "ão"}</div>` +
+          lista.map(renderCard).join("");
       }
 
-      const nome = todasSolicitacoes[0]?.nome ? todasSolicitacoes[0].nome.split(" ")[0] : "";
-      res.innerHTML =
-        `<div class="section-lbl">Olá${nome ? ", " + nome : ""} · ${lista.length} solicitação${lista.length !== 1 ? "ões" : ""}</div>` +
-        lista.map(d => {
-          const sk = getStatusKey(d.status);
-          const hasDetail = d.tecnico || d.dataProgramada || d.dataConclusao || d.tempo;
-          const isLiberado = (d.liberado || "").toString().toLowerCase().includes("sim");
-          return `
-          <div class="card">
-            <div class="card-header">
-              <div class="frota-group">
-                <div class="frota-eyebrow">Nº de Frota</div>
-                <div class="frota-num">${d.frota || "—"}<span class="frota-accent"></span></div>
-              </div>
-              <div class="card-id-date">
-                <div class="card-id">#${String(d.id).padStart(4,"0")}</div>
-                <div class="card-date">${d.dataCadastro}</div>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="card-title">${d.problema || "Solicitação de serviço"}</div>
-              ${d.odometro ? `<div class="card-odo">⬤ ${d.odometro} km</div>` : ""}
-              ${hasDetail ? `<div class="card-detail">
-                ${d.tecnico ? `<div class="card-detail-row"><span class="dot"></span><span>Técnico: <strong>${d.tecnico}</strong></span></div>` : ""}
-                ${d.dataProgramada ? `<div class="card-detail-row"><span class="dot"></span><span>Data programada: <strong>${d.dataProgramada}</strong></span></div>` : ""}
-                ${d.dataConclusao ? `<div class="card-detail-row"><span class="dot"></span><span>Concluído em: <strong>${d.dataConclusao}</strong></span></div>` : ""}
-                ${d.tempo ? `<div class="card-detail-row"><span class="dot"></span><span>Prazo estimado: <strong>${d.tempo} dia${d.tempo != 1 ? "s" : ""}</strong></span></div>` : ""}
-              </div>` : ""}
-              ${d.observacoes ? `<div class="card-obs">💬 ${d.observacoes}</div>` : ""}
-              <div class="card-footer">
-                <span class="badge badge-${sk}">${d.status || "Recebido"}</span>
-                <div style="display:flex;gap:6px;align-items:center">
-                  ${d.prioridade ? `<span class="prio prio-${d.prioridade.toLowerCase().includes("alt") ? "alta" : d.prioridade.toLowerCase().includes("med") ? "media" : "baixa"}">${d.prioridade}</span>` : ""}
-                  ${isLiberado ? '<span class="liberado">Veículo liberado</span>' : ""}
-                </div>
-              </div>
-            </div>
-          </div>`;
-        }).join("");
+      const antigas = todas.length - todas.filter(ehRecente).length;
+      const wrap = document.getElementById("historicoWrap");
+      wrap.style.display = antigas > 0 || mostrarHistorico ? "block" : "none";
+      document.getElementById("historicoBtn").textContent = mostrarHistorico
+        ? "Mostrar só as recentes"
+        : `Ver histórico completo (+${antigas} antiga${antigas !== 1 ? "s" : ""})`;
     }
 
     async function buscar() {
@@ -588,46 +674,27 @@
       if (!email) { alert("Por favor, insira seu e-mail."); return; }
 
       const res = document.getElementById("results");
-      const statsEl = document.getElementById("statsBlock");
       res.innerHTML = '<div class="state-msg"><div class="icon">⏳</div><p>Buscando suas solicitações...</p></div>';
-      statsEl.style.display = "none";
-      todasSolicitacoes = [];
+      document.getElementById("statsBlock").style.display = "none";
+      document.getElementById("historicoWrap").style.display = "none";
+      todas = [];
       filtroAtivo = "todos";
+      mostrarHistorico = false;
 
       try {
         const resp = await fetch(API_URL + "?email=" + encodeURIComponent(email));
         const data = await resp.json();
+        const lista = Array.isArray(data) ? data : (data.solicitacoes || []);
 
-        if (!data.length) {
+        if (!lista.length) {
           res.innerHTML = '<div class="state-msg"><div class="icon">📭</div><p>Nenhuma solicitação encontrada.<br><small>Verifique se o e-mail é o mesmo do formulário.</small></p></div>';
           return;
         }
 
-        todasSolicitacoes = data.sort(function(a, b) {
-          var ra = Number(a.dataCadastroRaw) || parseBR(a.dataCadastro) || Number(a.id);
-          var rb = Number(b.dataCadastroRaw) || parseBR(b.dataCadastro) || Number(b.id);
-          return rb - ra;
-        });
-
-        let prog=0, and=0, conc=0, pend=0;
-        todasSolicitacoes.forEach(d => {
-          const s = getStatusKey(d.status);
-          if (s === "programado") prog++;
-          else if (s === "andamento") and++;
-          else if (s === "concluido") conc++;
-          else if (s === "pendente") pend++;
-        });
-        document.getElementById("n-prog").textContent = prog;
-        document.getElementById("n-and").textContent = and;
-        document.getElementById("n-conc").textContent = conc;
-        document.getElementById("n-pend").textContent = pend;
-        statsEl.style.display = "block";
-
-        document.querySelectorAll(".filter-pill").forEach(b => b.classList.toggle("active", b.dataset.filter === "todos"));
-        document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
-
-        renderCards();
-      } catch(e) {
+        todas = lista.slice().sort((a, b) => (b.dataCadastroMs || 0) - (a.dataCadastroMs || 0));
+        document.getElementById("statsBlock").style.display = "block";
+        renderTudo();
+      } catch (e) {
         res.innerHTML = '<div class="state-msg"><div class="icon">⚠️</div><p>Erro ao buscar dados.<br><small>Verifique sua conexão e tente novamente.</small></p></div>';
       }
     }
