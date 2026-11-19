@@ -91,10 +91,11 @@ Todo dia, o Responsável pela Situação passa por todas as Solicitações abert
 
 ## O que o Motorista vê
 
-- Entra só com o e-mail que usou no formulário (maiúsculas e espaços não importam).
-- Por padrão: Solicitações **abertas** e as **Finalizadas/Canceladas dos últimos 30 dias**, das mais novas para as mais antigas.
+- Entra só com o e-mail que usou no formulário (maiúsculas e espaços não importam). O celular **lembra o e-mail**; o botão **Trocar e-mail** esquece.
+- Abas no topo para **filtrar por veículo** (Números de Frota das Solicitações daquele e-mail), com a quantidade de abertas em cada uma. Só aparecem quando há mais de um veículo.
+- Por padrão: Solicitações **abertas** (a atualizada mais recentemente primeiro) e, recolhidas embaixo, as **Finalizadas/Canceladas dos últimos 30 dias**.
 - Botão **Ver histórico completo** para ver todas.
-- Em cada card: frota, Nº, problemas relatados, Situação, recado da manutenção, data programada, previsão de liberação, técnico, Veículo liberado e "Atualizado em".
+- Em cada Solicitação: a **Situação em letra grande**, frota, Nº, previsão de liberação, Veículo liberado, o que foi relatado e o **trilho de etapas** Recebida → Programada → Em andamento → Finalizada. O **recado da manutenção** aparece dentro da etapa atual. "Aguardando peça" ocupa o lugar de "Em andamento" no trilho.
 
 ## Testar o script no computador
 
